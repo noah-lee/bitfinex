@@ -320,7 +320,7 @@ class TradeClient:
 
     def transfer(self, amount, currency, walletfrom, walletto):
         '''
-        Transfer between 
+        Transfer between
         '''
         payload = {
             'request': '/v1/transfer',
@@ -356,6 +356,22 @@ class TradeClient:
         }
         signed_payload = self._sign_payload(payload)
         r = requests.post(self.URL + "/history", headers=signed_payload, verify=True)
+        json_resp = r.json()
+
+        return json_resp
+
+    def hist_orders(self, limit=500):
+        """
+        View your latest inactive orders.
+        Limited to last 3 days and 1 request per minute.
+        """
+        payload = {
+            "request": "/v1/orders/hist",
+            "nonce": self._nonce,
+            "limit": limit,
+        }
+        signed_payload = self._sign_payload(payload)
+        r = requests.post(self.URL + "/orders/hist", headers=signed_payload, verify=True)
         json_resp = r.json()
 
         return json_resp
