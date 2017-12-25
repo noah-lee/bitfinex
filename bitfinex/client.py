@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from __future__ import absolute_import
 import requests
 import json
@@ -20,7 +22,8 @@ PATH_ORDERBOOK = "book/%s"
 # HTTP request timeout in seconds
 TIMEOUT = 5.0
 
-
+class ClientError(Exception):
+    pass
 
 class TradeClient:
     """
@@ -39,7 +42,7 @@ class TradeClient:
         Returns a nonce
         Used in authentication
         """
-        return str(time.time() * 1000000)
+        return str(int(time.time() * 1000))
 
     def _sign_payload(self, payload):
         j = json.dumps(payload)
@@ -76,15 +79,14 @@ class TradeClient:
             "type": ord_type
 
         }
-
         signed_payload = self._sign_payload(payload)
         r = requests.post(self.URL + "/order/new", headers=signed_payload, verify=True)
         json_resp = r.json()
 
         try:
             json_resp['order_id']
-        except:
-            return json_resp['message']
+        except KeyError:
+            raise ClientError(json_resp['message'])
 
         return json_resp
 
@@ -105,9 +107,10 @@ class TradeClient:
         json_resp = r.json()
 
         try:
-            json_resp['avg_excution_price']
-        except:
-            return json_resp['message']
+            json_resp['avg_execution_price']
+        except KeyError:
+            #return json_resp['message']
+            raise ClientError(json_resp['message'])
 
         return json_resp
 
@@ -144,9 +147,10 @@ class TradeClient:
         json_resp = r.json()
 
         try:
-            json_resp['avg_excution_price']
-        except:
-            return json_resp['message']
+            json_resp['avg_execution_price']
+        except KeyError:
+            #return json_resp['message']
+            raise ClientError(json_resp['message'])
 
         return json_resp
 
@@ -314,6 +318,24 @@ class TradeClient:
 
         return json_resp
 
+    def transfer(self, amount, currency, walletfrom, walletto):
+        '''
+        Transfer between
+        '''
+        payload = {
+            'request': '/v1/transfer',
+            'nonce': self._nonce,
+            'amount': amount,
+            'currency': currency,
+            'walletfrom': walletfrom,
+            'walletto': walletto
+            }
+        signed_payload = self._sign_payload(payload)
+        r = requests.post(self.URL + "/transfer", headers=signed_payload, verify=True)
+        json_resp = r.json()
+
+        return json_resp
+
     def history(self, currency, since=0, until=9999999999, limit=500, wallet='exchange'):
         """
         View you balance ledger entries
@@ -321,8 +343,7 @@ class TradeClient:
         :param since: Optional. Return only the history after this timestamp.
         :param until: Optional. Return only the history before this timestamp.
         :param limit: Optional. Limit the number of entries to return. Default is 500.
-        :param wallet: Optional. Return only entries that took place in this wallet. Accepted inputs are: “trading”,
-        “exchange”, “deposit”.
+        :param wallet: Optional. Return only entries that took place in this wallet. Accepted inputs are: "trading", "exchange", "deposit".
         """
         payload = {
             "request": "/v1/history",
@@ -335,6 +356,22 @@ class TradeClient:
         }
         signed_payload = self._sign_payload(payload)
         r = requests.post(self.URL + "/history", headers=signed_payload, verify=True)
+        json_resp = r.json()
+
+        return json_resp
+
+    def hist_orders(self, limit=500):
+        """
+        View your latest inactive orders.
+        Limited to last 3 days and 1 request per minute.
+        """
+        payload = {
+            "request": "/v1/orders/hist",
+            "nonce": self._nonce,
+            "limit": limit,
+        }
+        signed_payload = self._sign_payload(payload)
+        r = requests.post(self.URL + "/orders/hist", headers=signed_payload, verify=True)
         json_resp = r.json()
 
         return json_resp
