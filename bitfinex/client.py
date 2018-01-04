@@ -21,6 +21,7 @@ PATH_ORDERBOOK = "book/%s"
 
 # HTTP request timeout in seconds
 TIMEOUT = 5.0
+POST_TIMEOUT = 300.0
 
 class ClientError(Exception):
     pass
@@ -80,7 +81,7 @@ class TradeClient:
 
         }
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/order/new", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/order/new", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         try:
@@ -103,7 +104,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/order/cancel", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/order/cancel", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         try:
@@ -126,7 +127,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/order/cancel/all", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/order/cancel/all", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
         return json_resp
 
@@ -143,7 +144,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/order/status", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/order/status", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         try:
@@ -165,7 +166,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/orders", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/orders", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -181,7 +182,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/positions", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/positions", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
         return json_resp
 
@@ -198,7 +199,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/position/claim", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/position/claim", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -218,7 +219,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/mytrades", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/mytrades", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -244,7 +245,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/offer/new", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/offer/new", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -262,7 +263,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/offer/cancel", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/offer/cancel", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -280,7 +281,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/offer/status", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/offer/status", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -296,7 +297,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/offers", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/offers", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -313,7 +314,7 @@ class TradeClient:
         }
 
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/balances", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/balances", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -331,7 +332,7 @@ class TradeClient:
             'walletto': walletto
             }
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/transfer", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/transfer", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -355,7 +356,7 @@ class TradeClient:
             "wallet": wallet
         }
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/history", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/history", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
@@ -371,7 +372,7 @@ class TradeClient:
             "limit": limit,
         }
         signed_payload = self._sign_payload(payload)
-        r = requests.post(self.URL + "/orders/hist", headers=signed_payload, verify=True)
+        r = requests.post(self.URL + "/orders/hist", headers=signed_payload, verify=True, timeout=POST_TIMEOUT)
         json_resp = r.json()
 
         return json_resp
